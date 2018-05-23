@@ -31,8 +31,7 @@
         </ol>
         <div class="row">
             <div class="col-12">
-                <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj
-                    Zlecenie</a>
+                <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj Zlecenie</a>
             </div>
         </div>
         <div class="row">
@@ -54,8 +53,7 @@
     <!--<div th:replace="fragments/common :: dodajZlecenie">static dodaj zlecenie modal</div>-->
 
 
-    <div class="modal fade" id="dodajZlecenieModal" tabindex="-1" role="dialog"
-         aria-labelledby="DodajZlecenieModalLabel" aria-hidden="true" th:fragment="dodajZlecenie">
+    <div class="modal fade" id="dodajZlecenieModal" tabindex="-1" role="dialog" aria-labelledby="DodajZlecenieModalLabel" aria-hidden="true" th:fragment="dodajZlecenie">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -66,23 +64,27 @@
                 </div>
                 <div class="modal-body">
 
-                    <form name="sentMessage" method="post" id="dodajZLecenieFormId" novalidate="novalidate" action="/dodajZlecenie"
-                          th:object="${pusteZlecenie}">
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                    <form name="sentMessage" method="post" id="dodajZLecenieFormId" novalidate="novalidate" action="/dodajZlecenie" th:object="${pusteZlecenie}">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
                                 <label for="specialistDropdownId">Specjalista:</label>
-                                <select class="form-control" id="specialistDropdownId" name="specialistDropdownName"
-                                        autofocus th:field="*{specjalista}" data-validation="required"
-                                        data-validation-error-msg="Proszę powiedz nam jakiego specjalisty szukasz.">
+                                <select class="form-control" id="specialistDropdownId" name="specialistDropdownName" autofocus th:field="*{specjalista}"
+                                        data-validation="required" data-validation-error-msg="Proszę powiedz nam jakiego specjalisty szukasz.">
                                     <option th:each="specialist : ${availableSpecializations}"
                                             th:value="${specialist.id}"
                                             th:text="${specialist.name}"></option>
                                 </select>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="terminDateTimeId">Termin</label>
+                                <input class="form-control" id="terminDateTimeId" type="datetime-local"
+                                       placeholder="W jakim terminie" th:field="*{date}" data-validation="required"
+                                       data-validation-error-msg="W jaki terminie ma być wykonana usługa.">
+                            </div>
                         </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label for="miastoDropdownId" >Miasto:</label>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="miastoDropdownId">Miasto:</label>
                                 <select class="form-control" id="miastoDropdownId" name="miastoDropdownName"
                                         th:field="*{address.city}" data-validation="required"
                                         data-validation-error-msg="Proszę powiedz nam W jakim mieśćie ma być świadczona usługa.">
@@ -91,10 +93,16 @@
                                             th:text="${city.name}"></option>
                                 </select>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="opisTextAreaId">Opis</label>
+                                <textarea class="form-control" id="opisTextAreaId" rows="3" name="opisTextAreaName" th:field="*{description}"
+                                          placeholder="Chcę aby....Opisz jaką pracę chcesz zlecić." required="required" data-validation="required"
+                                          data-validation-error-msg="Proszę, opisz w kilku słowach co jest do zrobienia."></textarea>
+                            </div>
                         </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label for="districtDropdownId" >Dzielnica:</label>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="districtDropdownId">Dzielnica:</label>
                                 <select class="form-control" id="districtDropdownId" name="districtDropdownName" th:field="*{address.district}"
                                         data-validation="required" data-validation-error-msg="Proszę powiedz nam w jakiej dzielnicy ma być świadczona usługa.">
                                     <option th:each="district : ${availableDistricts}"
@@ -102,25 +110,7 @@
                                             th:text="${district.name}"></option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label for="opisTextAreaId">Opis</label>
-                                <textarea class="form-control" id="opisTextAreaId" rows="3" name="opisTextAreaName" th:field="*{description}"
-                                          placeholder="Chcę aby....Opisz jaką pracę chcesz zlecić." required="required" data-validation="required"
-                                          data-validation-error-msg="Proszę, opisz w kilku słowach co jest do zrobienia."></textarea>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label for="terminDateTimeId">Termin</label>
-                                <input class="form-control" id="terminDateTimeId" type="datetime-local"
-                                       placeholder="W jakim terminie" th:field="*{date}" data-validation="required"
-                                       data-validation-error-msg="W jaki terminie ma być wykonana usługa.">
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <div class="form-group col-md-6">
                                 <label for="nrTelefonuTextId">Numer Telefonu</label>
                                 <input class="form-control" id="nrTelefonuTextId" type="tel" placeholder="Numer telefonu"
                                        th:field="*{phoneNumber}" data-validation="required"
@@ -205,24 +195,23 @@
             groupCheckedEnd: ' item(s)',
             badCreditCard: 'The credit card number is not correct',
             badCVV: 'The CVV number was not correct',
-            wrongFileDim : 'Incorrect image dimensions,',
-            imageTooTall : 'the image can not be taller than',
-            imageTooWide : 'the image can not be wider than',
-            imageTooSmall : 'the image was too small',
-            min : 'min',
-            max : 'max',
-            imageRatioNotAccepted : 'Image ratio is not accepted'
+            wrongFileDim: 'Incorrect image dimensions,',
+            imageTooTall: 'the image can not be taller than',
+            imageTooWide: 'the image can not be wider than',
+            imageTooSmall: 'the image was too small',
+            min: 'min',
+            max: 'max',
+            imageRatioNotAccepted: 'Image ratio is not accepted'
         };
 
 
         $.validate({
-            validateOnBlur : false, // disable validation when input looses focus
-            errorMessagePosition : 'top', // Instead of 'inline' which is default
-            language : myLanguage
+            validateOnBlur: false, // disable validation when input looses focus
+            errorMessagePosition: 'top', // Instead of 'inline' which is default
+            language: myLanguage
         });
 
     </script>
-
 
 
 </div>
