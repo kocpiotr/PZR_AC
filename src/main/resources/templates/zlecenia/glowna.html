@@ -14,6 +14,8 @@
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href="css/sb-admin.css" rel="stylesheet">
+    <!-- Font awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -29,17 +31,74 @@
             </li>
             <li class="breadcrumb-item active">Zlecenia</li>
         </ol>
-        <div class="row">
-            <div class="col-12">
-                <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj Zlecenie</a>
+        <div class="row py-2 float-none">
+            <div class="col-3">
+                <a class="btn btn-primary" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj Zlecenie</a>
             </div>
         </div>
-        <div class="row">
-            <!-- tabela zadan -->
-            <!-- w tabeli edycja (historia) -->
-            <!-- w tabeli usuwanie (tylko oznaczenie jako do usuniecia) -->
 
+        <!--USUWANIE/ARCHIWIZOWANIE-->
+        <!--EDYCJA-->
+
+        <!-- ZLECENIA-->
+        <div class="datatable-wide">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-table"></i> Zlecenia
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm table-striped" id="dataTable" width="80%" cellspacing="10">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Data Zgłoszenia</th>
+                                <th>Data Realizacji</th>
+                                <th>Pora Dnia Realizacji</th>
+                                <th>Specialista</th>
+                                <th>Miasto</th>
+                                <th>Dzielnica</th>
+                                <th>Opis</th>
+                                <th>Nr telefonu</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Status</th>
+                                <th>Data zgłoszenia</th>
+                                <th>Data Realizacji</th>
+                                <th>Pora Dnia Realizacji</th>
+                                <th>Specialista</th>
+                                <th>Miasto</th>
+                                <th>Dzielnica</th>
+                                <th>Opis</th>
+                                <th>Nr telefonu</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr th:each="orderr : ${existingOrderrs}">
+                                <td>
+                                    <i class="fas fa-check-circle" th:classappend="${orderr.process.currentStep.getType().name() == 'NOWE'} ? 'text-danger' : 'text-success'"></i>
+                                    <p th:text="${orderr.process.currentStep.getType().name()}"></p>
+                                </td>
+                                <td th:text="${#temporals.format(orderr.creationDate, 'dd-MM-yyyy HH:mm')}">2011/04/25</td>
+                                <td th:text="${#temporals.format(orderr.serviceDate, 'dd-MM-yyyy')}">2011/04/25</td>
+                                <td th:text="${orderr.serviceTimeOfDay}">Hydraulik</td>
+                                <td th:text="${orderr.specjalista.name}">Hydraulik</td>
+                                <td th:text="${orderr.address.city.name}">Elbląg</td>
+                                <td th:text="${orderr.address.district.name}">Zawada</td>
+                                <td th:text="${orderr.description}">Wymiana spłuczki</td>
+                                <td th:text="${orderr.phoneNumber}">515079676</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
         </div>
+
     </div>
 
     <div th:replace="fragments/common :: footer">static logout modal</div>
@@ -78,8 +137,16 @@
                             <div class="form-group col-md-6">
                                 <label for="terminDateTimeId">Termin</label>
                                 <input class="form-control" id="terminDateTimeId" type="datetime-local"
-                                       placeholder="W jakim terminie" th:field="*{date}" data-validation="required"
+                                       placeholder="W jakim terminie" th:field="*{serviceDate}" data-validation="required"
                                        data-validation-error-msg="W jaki terminie ma być wykonana usługa.">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="terminTimeInDayeId">Pora Dnia</label>
+                                <select class="form-control" id="terminTimeInDayeId" name="poraDniaDropdownName" th:field="*{serviceTimeOfDay}"
+                                        data-validation="required" data-validation-error-msg="O jakiej porze dnia ma być wykonana usługa.">
+                                    <option th:each="poraDnia : ${timesOfDay}"
+                                            th:value="${poraDnia.ordinal()}"
+                                            th:text="${poraDnia.name()}"></option>
                             </div>
                         </div>
                         <div class="form-row">

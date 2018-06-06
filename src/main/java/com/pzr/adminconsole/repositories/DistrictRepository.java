@@ -1,6 +1,6 @@
 package com.pzr.adminconsole.repositories;
 
-import com.pzr.adminconsole.entities.District;
+import com.pzr.adminconsole.entities.address.District;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Set;

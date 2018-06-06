@@ -1,6 +1,6 @@
 package com.pzr.adminconsole.controllers;
 
-import com.pzr.adminconsole.entities.District;
+import com.pzr.adminconsole.entities.address.District;
 import com.pzr.adminconsole.repositories.DistrictRepository;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

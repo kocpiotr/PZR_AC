@@ -1,4 +1,4 @@
-package com.pzr.adminconsole.entities;
+package com.pzr.adminconsole.entities.address;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

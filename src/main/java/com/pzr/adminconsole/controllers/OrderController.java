@@ -1,6 +1,7 @@
 package com.pzr.adminconsole.controllers;
 
 import com.pzr.adminconsole.entities.Orderr;
+import com.pzr.adminconsole.entities.enums.TimeOfDayEnum;
 import com.pzr.adminconsole.repositories.CityRepository;
 import com.pzr.adminconsole.repositories.DistrictRepository;
 import com.pzr.adminconsole.repositories.OrderRepository;
@@ -31,7 +32,8 @@ public class OrderController {
         model.addAttribute("availableSpecializations", specializationRepository.findAll());
         model.addAttribute("availableCities", cityRepository.findAll());
         model.addAttribute("availableDistricts", districtRepository.findAll());
-        
+        model.addAttribute("existingOrderrs", orderRepository.findAllByOrderByCreationDateAsc());
+        model.addAttribute("timesOfDay", TimeOfDayEnum.values());
         model.addAttribute("pusteZlecenie", new Orderr());
         return "zlecenia/glowna";
     }
@@ -42,4 +44,5 @@ public class OrderController {
 
         return new ModelAndView("redirect:/zlecenia");
     }
+
 }
