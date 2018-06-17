@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Pan Złota Rączka - Admin Console</title>
+    <!-- Bootstrap core CSS-->
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="../../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="../../static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../../static/vendor/jquery/jquery.min.js"></script>
+    <script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../../static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="../../static/js/sb-admin.min.js"></script>
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<div class="content-wrapper">
+
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer" th:fragment="footer">
+        <div class="container">
+            <div class="text-center">
+                <small>Copyright © Your Website 2018</small>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" th:fragment="logout">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dodaj Zlecenie Modal-->
+    <div class="modal fade" id="dodajZlecenieModal" tabindex="-1" role="dialog" aria-labelledby="DodajZlecenieModalLabel" aria-hidden="true" th:fragment="dodajZlecenie">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dodajZlecenieModalLabel">Czy na pewno chcesz wyjść?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form name="sentMessage" id="contactForm" novalidate="novalidate" action="/dodajZlecenie" th:object="${pusteZlecenie}">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Specjalista</label>
+                                <input class="form-control" id="specjalista" type="text" list="listaSpecializacji"
+                                       placeholder="Jakiego Specjlaisty szukasz" required="required" th:field="*{specjalista}"
+                                       data-validation-required-message="Proszę powiedz nam jakiego specjalisty szukasz.">
+                                <datalist id="listaSpecializacji">
+                                    <option value="Hydraulik">
+                                    <option value="Kafelkarz">
+                                    <option value="Stolarz">
+                                    <option value="Elektryk">
+                                    <option value="Budowlaniec">
+                                </datalist>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Miasto</label>
+                                <input class="form-control" id="miasto" type="text" placeholder="W jakim mieście"
+                                       list="listaMiast" required="required" th:field="*{miasto}"
+                                       data-validation-required-message="W jakim mieście ma być świadczona usługa.">
+                                <datalist id="listaMiast">
+                                    <option value="Elbląg">
+                                    <option value="Gdańsk">
+                                    <option value="Warszawa">
+                                    <option value="Poznań">
+                                    <option value="Kraków">
+                                </datalist>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Dzielnica</label>
+                                <input class="form-control" id="dzielnica" type="text" placeholder="W jakiej dzielnicy"
+                                       list="listaDzielnic" required="required" th:field="*{dzielnica}"
+                                       data-validation-required-message="W jakiej dzielnicy ma być świadczona usługa.">
+                                <datalist id="listaDzielnic">
+                                    <option value="Całe Miasto"/>
+                                </datalist>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Opis</label>
+                                <textarea class="form-control" id="opis" rows="3" placeholder="Opisz pracę do wykonania"
+                                          required="required" th:field="*{opis}"
+                                          data-validation-required-message="Proszę, opisz w kilku słowach co jest do zrobienia."></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Termin</label>
+                                <input class="form-control" id="termin" type="datetime-local" placeholder="W jakim terminie"
+                                       required="required" th:field="*{termin}"
+                                       data-validation-required-message="W jaki terminie ma być wykonana usługa.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Numer Telefonu</label>
+                                <input class="form-control" id="telefon" type="tel" placeholder="Numer telefonu"
+                                       required="required" th:field="*{numerTelefonu}"
+                                       data-validation-required-message="Proszę podaj numer na który mamy oddzwonić (gdy znajdziemy kogoś odpowwiedniego)">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Wyślij</button>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Anuluj</button>
+                    <a class="btn btn-primary" href="login.html">Zapisz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

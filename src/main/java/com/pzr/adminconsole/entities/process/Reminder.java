@@ -15,5 +15,5 @@ public class Reminder {
     private String text;
 
     @OneToOne
-    private ManagingProcess status;
+    private StepInstance step;
 }

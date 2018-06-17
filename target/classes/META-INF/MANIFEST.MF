@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: adminconsole
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: piotr
+Implementation-Vendor-Id: com.pzr
+Build-Jdk: 1.8.0_151
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/adminconsole
+Created-By: Maven Integration for Eclipse
+

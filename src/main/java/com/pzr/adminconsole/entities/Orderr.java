@@ -2,7 +2,8 @@ package com.pzr.adminconsole.entities;
 
 import com.pzr.adminconsole.entities.address.Address;
 import com.pzr.adminconsole.entities.enums.TimeOfDayEnum;
-import com.pzr.adminconsole.entities.process.ManagingProcess;
+import com.pzr.adminconsole.entities.process.ProcessInstance;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,8 +34,8 @@ public class Orderr {
     private TimeOfDayEnum serviceTimeOfDay;
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private ManagingProcess process;
+    @OneToOne(cascade = CascadeType.MERGE)
+    private ProcessInstance process;
 
     //-------------------------------------CLEVER METHODS----------------------------------------
 
