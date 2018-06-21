@@ -58,87 +58,78 @@
     </div>
 
     <!-- Dodaj Zlecenie Modal-->
-    <div class="modal fade" id="dodajZlecenieModal" tabindex="-1" role="dialog" aria-labelledby="DodajZlecenieModalLabel" aria-hidden="true" th:fragment="dodajZlecenie">
+	<div class="modal fade" id="addOrderModal" tabindex="-1" role="dialog" aria-labelledby="addOrderModalLabel" aria-hidden="true" th:fragment="addOrder">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dodajZlecenieModalLabel">Czy na pewno chcesz wyjść?</h5>
+                    <h5 class="belka_tytulowa_dodaj_edytuj_zlecenie modal-title" id="addOrderModalLabel">Dodaj Zlecenie</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
-                    <form name="sentMessage" id="contactForm" novalidate="novalidate" action="/dodajZlecenie" th:object="${pusteZlecenie}">
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Specjalista</label>
-                                <input class="form-control" id="specjalista" type="text" list="listaSpecializacji"
-                                       placeholder="Jakiego Specjlaisty szukasz" required="required" th:field="*{specjalista}"
-                                       data-validation-required-message="Proszę powiedz nam jakiego specjalisty szukasz.">
-                                <datalist id="listaSpecializacji">
-                                    <option value="Hydraulik">
-                                    <option value="Kafelkarz">
-                                    <option value="Stolarz">
-                                    <option value="Elektryk">
-                                    <option value="Budowlaniec">
-                                </datalist>
-                                <p class="help-block text-danger"></p>
+                    <form name="sentMessage" method="post" id="addOrderFormId" novalidate="novalidate" action="/zlecenia/dodaj" th:object="${pusteZlecenie}">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="specialistDropdownId">Specjalista:</label>
+                                <select class="form-control" id="specialistDropdownId" name="specialistDropdownName" autofocus th:field="*{specjalista}"
+                                        data-validation="required" data-validation-error-msg="Proszę powiedz nam jakiego specjalisty szukasz.">
+                                    <option th:each="specialist : ${availableSpecializations}"
+                                            th:value="${specialist.id}"
+                                            th:text="${specialist.name}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="plenned_service_dateId">Termin</label>
+                                <input class="form-control" id="plenned_service_dateId" type="date"
+                                       placeholder="W jakim terminie" th:field="*{serviceDate}" data-validation="required"
+                                       data-validation-error-msg="W jaki terminie ma być wykonana usługa.">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="terminTimeInDayeId">Pora Dnia</label>
+                                <select class="form-control" id="terminTimeInDayeId" name="poraDniaDropdownName" th:field="*{serviceTimeOfDay}"
+                                        data-validation="required" data-validation-error-msg="O jakiej porze dnia ma być wykonana usługa.">
+                                    <option th:each="poraDnia : ${timesOfDay}"
+                                            th:value="${poraDnia.name()}"
+                                            th:text="${poraDnia.name()}"></option>
+                                </select>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Miasto</label>
-                                <input class="form-control" id="miasto" type="text" placeholder="W jakim mieście"
-                                       list="listaMiast" required="required" th:field="*{miasto}"
-                                       data-validation-required-message="W jakim mieście ma być świadczona usługa.">
-                                <datalist id="listaMiast">
-                                    <option value="Elbląg">
-                                    <option value="Gdańsk">
-                                    <option value="Warszawa">
-                                    <option value="Poznań">
-                                    <option value="Kraków">
-                                </datalist>
-                                <p class="help-block text-danger"></p>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="cityDropdownId">Miasto:</label>
+                                <select class="form-control" id="cityDropdownId" name="miastoDropdownName"
+                                        th:field="*{address.city}" data-validation="required"
+                                        data-validation-error-msg="Proszę powiedz nam w jakim mieśćie ma być świadczona usługa.">
+                                    <option th:each="city : ${availableCities}"
+                                            th:value="${city.id}"
+                                            th:text="${city.name}">other</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="descriptionTextAreaId">Opis</label>
+                                <textarea class="form-control" id="descriptionTextAreaId" rows="3" name="descriptionTextAreaName" th:field="*{description}"
+                                          placeholder="Chcę aby....Opisz jaką pracę chcesz zlecić." required="required" data-validation="required"
+                                          data-validation-error-msg="Proszę, opisz w kilku słowach co jest do zrobienia."></textarea>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Dzielnica</label>
-                                <input class="form-control" id="dzielnica" type="text" placeholder="W jakiej dzielnicy"
-                                       list="listaDzielnic" required="required" th:field="*{dzielnica}"
-                                       data-validation-required-message="W jakiej dzielnicy ma być świadczona usługa.">
-                                <datalist id="listaDzielnic">
-                                    <option value="Całe Miasto"/>
-                                </datalist>
-                                <p class="help-block text-danger"></p>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="districtDropdownId">Dzielnica:</label>
+                                <select class="form-control" id="districtDropdownId" name="districtDropdownName" 
+                                		th:field="*{address.district}" data-validation="required"
+                                		data-validation-error-msg="Proszę powiedz nam w jakiej dzielnicy ma być świadczona usługa.">
+                                    <option th:each="district : ${availableDistricts}"
+                                            th:value="${district.id}"
+                                            th:text="${district.name}">ble</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Opis</label>
-                                <textarea class="form-control" id="opis" rows="3" placeholder="Opisz pracę do wykonania"
-                                          required="required" th:field="*{opis}"
-                                          data-validation-required-message="Proszę, opisz w kilku słowach co jest do zrobienia."></textarea>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Termin</label>
-                                <input class="form-control" id="termin" type="datetime-local" placeholder="W jakim terminie"
-                                       required="required" th:field="*{termin}"
-                                       data-validation-required-message="W jaki terminie ma być wykonana usługa.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Numer Telefonu</label>
-                                <input class="form-control" id="telefon" type="tel" placeholder="Numer telefonu"
-                                       required="required" th:field="*{numerTelefonu}"
-                                       data-validation-required-message="Proszę podaj numer na który mamy oddzwonić (gdy znajdziemy kogoś odpowwiedniego)">
-                                <p class="help-block text-danger"></p>
+                            <div class="form-group col-md-6">
+                                <label for="nrTelefonuTextId">Numer Telefonu</label>
+                                <input class="form-control" id="nrTelefonuTextId" type="tel" placeholder="Numer telefonu"
+                                       th:field="*{phoneNumber}" data-validation="required"
+                                       data-validation-error-msg="Proszę podaj numer na który mamy oddzwonić (gdy znajdziemy kogoś odpowwiedniego)">
                             </div>
                         </div>
                         <br>
@@ -151,11 +142,43 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Anuluj</button>
-                    <a class="btn btn-primary" href="login.html">Zapisz</a>
                 </div>
             </div>
         </div>
     </div>
+
+	<!-- USUN ZLECENIE MODAL -->
+	<div class="modal fade" id="removeOrderModal" tabindex="-1" role="dialog" aria-labelledby="removeOrderModalLabel" aria-hidden="true" th:fragment="removeOrder">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="removeOrderModalLabel">Usun Zlecenie</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form name="removeOrderForm" method="post" id="removeOrderFormId" novalidate="novalidate" action="/usunZlecenie" th:object="${pusteZlecenie}">
+						<input type="hidden" id="hidden_order_id_value" value = '6'/>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label>Czy napewno chcesz usunąć zlecenie?</label>
+							</div>
+						</div>
+						<br>
+						<div class="modal-footer">
+							<button class="btn btn-secondary" id="removeOrderButtonYes" type="button"
+								data-dismiss="modal">Tak</button>
+							<button class="btn btn-secondary" type="button"
+								data-dismiss="modal">Nie</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 </div>
 </body>
 

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Pan Złota Rączka - Admin Console</title>
+    <!-- Bootstrap core CSS-->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin.css" rel="stylesheet">
+    <!-- Font awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<!-- Navigation-->
+<div th:replace="fragments/navigation :: navigation-panel-left">Static navigation!!!</div>
+
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Strona Główna</a>
+            </li>
+            <li class="breadcrumb-item active">Zlecenia</li>
+        </ol>
+        <div class="row py-2 float-none">
+            <div class="col-3">
+                <a class="addOrder btn btn-primary" data-toggle="modal" data-target="#addOrderModal">Dodaj Zlecenie</a>
+            </div>
+        </div>
+
+        <!-- ZLECENIA-->
+        <div class="datatable-wide">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-table"></i> Zlecenia
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm table-striped" id="dataTable" width="80%" cellspacing="10">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Data Zgłoszenia</th>
+                                <th>Data Realizacji</th>
+                                <th>Pora Dnia Realizacji</th>
+                                <th>Specialista</th>
+                                <th>Miasto</th>
+                                <th>Dzielnica</th>
+                                <th>Opis</th>
+                                <th>Nr telefonu</th>
+                                <th>edytuj</th>
+                                <th>usun</th>
+                                <th>Przetwarzaj</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="orderr : ${existingOrderrs}">
+                                <td>
+                                    <i class="fas " th:classappend="${orderr.process.currentStep.name == 'Nowe'} ? 'fa-exclamation-triangle text-danger' : 'fa-check-circle text-success'"></i>
+                                    <p th:text="${orderr.process.currentStep.name}"></p>
+                                </td>
+                                <td th:text="${#temporals.format(orderr.creationDate, 'dd-MM-yyyy HH:mm')}">2011/04/25</td>
+                                <td th:text="${#temporals.format(orderr.serviceDate, 'dd-MM-yyyy')}">2011/04/25</td>
+                                <td th:text="${orderr.serviceTimeOfDay}">Hydraulik</td>
+                                <td th:text="${orderr.specjalista.name}">Hydraulik</td>
+                                <td th:text="${orderr.address.city.name}">Elbląg</td>
+                                <td th:text="${orderr.address.district.name}">Zawada</td>
+                                <td th:text="${orderr.description}">Wymiana spłuczki</td>
+                                <td th:text="${orderr.phoneNumber}">515079676</td>
+                                <td>
+                                	<span class="editOrder fa fa-pencil-alt" data-toggle="modal" data-target="#addOrderModal" 
+                                	th:attr="order_id=${orderr.id}, specialist_id=${orderr.specjalista.id}, plenned_service_date=${orderr.serviceDate}, plenned_time_of_day=${orderr.serviceTimeOfDay},
+                                	city_id=${orderr.address.city.id}, description=${orderr.description}, district_id=${orderr.address.district.id}, phone_number=${orderr.phoneNumber}"></span>
+                                </td>
+                                <td>
+                                	<span class="removeOrder fa fa-trash" th:attr="order_id=${orderr.id}"
+                                	data-toggle="modal" data-target="#removeOrderModal"></span>
+                                </td>
+                                <td>
+                                	<span class="fas fa-play-circle" data-toggle="modal" th:attr="order_id=${orderr.id}" data-target="#przetwarzajZlecenieModal"></span>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/common :: footer">static logout modal</div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fa fa-angle-up"></i>
+    </a>
+
+    <div th:replace="fragments/common :: logout">static logout modal</div>
+    <div th:replace="fragments/common :: addOrder">static dodaj zlecenie modal</div>
+    <div th:replace="fragments/common :: removeOrder">static usun zlecenie modal</div>
+
+	<!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+	<!-- validations -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+	<script type="text/javascript" src="js/project_validations.js"></script>
+    
+    <script>
+        $("#cityDropdownId").change(function () {
+            var selectedCity = $("#cityDropdownId :selected").text();
+
+            //remove all districts
+            $("#districtDropdownId").empty();
+
+            //populate new districts
+            $.getJSON("/districts/" + selectedCity, function (json) {
+                $.each(json, function (idx, field) {
+                    $("select#districtDropdownId").append($("<option></option>")
+                        .attr("value", field.id)
+                        .text(field.name));
+                });
+            });
+        });
+        
+        $(".removeOrder").click(function () {
+        	var komponent = $(this);
+            var order_id = komponent.attr('order_id');
+            $("input#hidden_order_id_value").val(order_id);
+            $("button#removeOrderButtonYes").attr("onclick", "location.href='/zlecenia/usun/" + order_id + "'");
+        })
+
+        $(".addOrder").click(function () {
+        	$("h5#addOrderModalLabel").text("Dodaj Zlecenie");
+        	$("#addOrderFormId").attr("action","/zlecenia/dodaj");
+        	
+            $("select#specialistDropdownId").val("");
+            $("input#plenned_service_dateId").val("");
+            $("select#terminTimeInDayeId").val("");
+            $("select#cityDropdownId").val("");
+            $("textarea#descriptionTextAreaId").val("");
+            $("select#districtDropdownId").val("");
+            $("input#nrTelefonuTextId").val("");
+            
+        })
+        
+        $(".editOrder").click(function () {
+        	var komponent = $(this);
+            
+        	var order_id = komponent.attr('order_id');
+        	var specialist_id = komponent.attr('specialist_id');
+        	var plenned_service_date = komponent.attr('plenned_service_date');
+        	var plenned_time_of_day = komponent.attr('plenned_time_of_day');
+        	var city_id = komponent.attr('city_id');
+        	var description = komponent.attr('description');
+        	var district_id = komponent.attr('district_id');
+        	var phone_number = komponent.attr('phone_number');
+        	
+            $("h5#addOrderModalLabel").text("Edytuj Zlecenie");
+            $("#addOrderFormId").attr("action","/zlecenia/edytuj/"+order_id);
+        	
+            $("select#specialistDropdownId").val(specialist_id);
+            $("input#plenned_service_dateId").val(plenned_service_date);
+            $("select#terminTimeInDayeId").val(plenned_time_of_day);
+            $("select#cityDropdownId").val(city_id).change();
+            $("textarea#descriptionTextAreaId").val(description);
+            $("select#districtDropdownId").val(district_id);
+            $("input#nrTelefonuTextId").val(phone_number);  
+        })
+        
+        
+	</script>
+
+
+</div>
+</body>
+</html>

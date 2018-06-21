@@ -39,6 +39,7 @@ public class OrderController {
             DistrictRepository districtRepository, AddressRepository addressRepository, ProcessService processService,
             ProcessInstanceRepository processInstanceRepository) {
         super();
+        
         this.orderRepository = orderRepository;
         this.specializationRepository = specializationRepository;
         this.cityRepository = cityRepository;
@@ -49,19 +50,21 @@ public class OrderController {
     }
 
     @RequestMapping("/zlecenia")
-    public String mainPage(final Model model) {
+    public String view(final Model model) {
+        final List<City> listOfCities = cityRepository.findAll();
+
         model.addAttribute("availableSpecializations", specializationRepository.findAll());
-        List<City> listOfCities = cityRepository.findAll();
         model.addAttribute("availableCities", listOfCities);
         model.addAttribute("availableDistricts", districtRepository.findAllByCityName(listOfCities.get(0).getName()));
         model.addAttribute("existingOrderrs", orderRepository.findAllByOrderByCreationDateAsc());
         model.addAttribute("timesOfDay", TimeOfDayEnum.values());
         model.addAttribute("pusteZlecenie", new Orderr());
-        return "zlecenia/glowna";
+        
+        return "zlecenia/main";
     }
 
     @RequestMapping("/zlecenia/usun/{id}")
-    public ModelAndView usunZlecenie(@PathVariable("id") Long id,  final Model model) {
+    public ModelAndView remove(@PathVariable("id") Long id,  final Model model) {
         final Optional<Orderr> foundOrder = orderRepository.findById(id);
         if (foundOrder.isPresent()) {
             orderRepository.delete(foundOrder.get());
@@ -70,8 +73,7 @@ public class OrderController {
     }
     
     @RequestMapping("/zlecenia/dodaj")
-    public ModelAndView addOrder(final @ModelAttribute Orderr orderr) {
-    
+    public ModelAndView add(final @ModelAttribute Orderr orderr) {
         ProcessInstance process = processService.createProcess();
         orderr.setProcess(process);
         
@@ -84,7 +86,7 @@ public class OrderController {
     }
     
     @RequestMapping("/zlecenia/edytuj/{id}")
-    public ModelAndView addOrder(@PathVariable("id") Long id, final @ModelAttribute Orderr srcOrder) {    
+    public ModelAndView edit(@PathVariable("id") Long id, final @ModelAttribute Orderr srcOrder) {    
         final Orderr target = orderRepository.findById(id).get();
         
         OrderrMapper.map(target, srcOrder);
