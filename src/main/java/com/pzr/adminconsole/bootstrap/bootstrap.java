@@ -84,9 +84,15 @@ public class bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
         District pasłęk_południe = new District("Pasłęk Poludnie");
         pasłęk_południe.setCity(cityRepository.findByName("Pasłęk"));
+        
+        District pasłęk_polnoc = new District("Pasłęk Północ");
+        pasłęk_polnoc.setCity(cityRepository.findByName("Pasłęk"));
+        
 
         districtRepository.save(zawada);
         districtRepository.save(pasłęk_południe);
+        districtRepository.save(pasłęk_polnoc);
+        
 
     }
 

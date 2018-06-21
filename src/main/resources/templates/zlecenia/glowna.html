@@ -33,7 +33,7 @@
         </ol>
         <div class="row py-2 float-none">
             <div class="col-3">
-                <a class="btn btn-primary" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj Zlecenie</a>
+                <a class="dodajZlecenie btn btn-primary" data-toggle="modal" data-target="#dodajZlecenieModal">Dodaj Zlecenie</a>
             </div>
         </div>
 
@@ -60,12 +60,15 @@
                                 <th>Dzielnica</th>
                                 <th>Opis</th>
                                 <th>Nr telefonu</th>
+                                <th>edytuj</th>
+                                <th>usun</th>
+                                <th>Przetwarzaj</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="orderr : ${existingOrderrs}">
                                 <td>
-                                    <i class="fas fa-check-circle" th:classappend="${orderr.process.currentStep.name == 'Nowe'} ? 'text-danger' : 'text-success'"></i>
+                                    <i class="fas " th:classappend="${orderr.process.currentStep.name == 'Nowe'} ? 'fa-exclamation-triangle text-danger' : 'fa-check-circle text-success'"></i>
                                     <p th:text="${orderr.process.currentStep.name}"></p>
                                 </td>
                                 <td th:text="${#temporals.format(orderr.creationDate, 'dd-MM-yyyy HH:mm')}">2011/04/25</td>
@@ -76,6 +79,18 @@
                                 <td th:text="${orderr.address.district.name}">Zawada</td>
                                 <td th:text="${orderr.description}">Wymiana spłuczki</td>
                                 <td th:text="${orderr.phoneNumber}">515079676</td>
+                                <td>
+                                	<span class="edytujZlecenie fa fa-pencil-alt" th:attr="zlecenie-id=${orderr.id}, specjalista_id=${orderr.specjalista.id}, terminDateTime=${orderr.serviceDate}, teminTimeOfDay=${orderr.serviceTimeOfDay},
+                                	miasto_id=${orderr.address.city.id}, opis=${orderr.description}, dzielnica_id=${orderr.address.district.id}, nr-telefonu=${orderr.phoneNumber}"
+                                	data-toggle="modal" data-target="#dodajZlecenieModal"></span>
+                                </td>
+                                <td>
+                                	<span class="usunZlecenie fa fa-trash" th:attr="zlecenie-id=${orderr.id}"
+                                	data-toggle="modal" data-target="#usunZlecenieModal"></span>
+                                </td>
+                                <td>
+                                	<span class="fas fa-play-circle" data-toggle="modal" th:attr="zlecenie-id=${orderr.id}" data-target="#przetwarzajZlecenieModal"></span>
+                                </td>
                             </tr>
 
                             </tbody>
@@ -103,14 +118,14 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dodajZlecenieModalLabel">Dodaj Zlecenie</h5>
+                    <h5 class="belka_tytulowa_dodaj_edytuj_zlecenie modal-title" id="dodajZlecenieModalLabel">Dodaj Zlecenie</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
-                    <form name="sentMessage" method="post" id="dodajZLecenieFormId" novalidate="novalidate" action="/dodajZlecenie" th:object="${pusteZlecenie}">
+                    <form name="sentMessage" method="post" id="dodajZLecenieFormId" novalidate="novalidate" action="/zlecenia/dodaj" th:object="${pusteZlecenie}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="specialistDropdownId">Specjalista:</label>
@@ -158,11 +173,12 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="districtDropdownId">Dzielnica:</label>
-                                <select class="form-control" id="districtDropdownId" name="districtDropdownName" th:field="*{address.district}"
-                                        data-validation="required" data-validation-error-msg="Proszę powiedz nam w jakiej dzielnicy ma być świadczona usługa.">
+                                <select class="form-control" id="districtDropdownId" name="districtDropdownName" 
+                                		th:field="*{address.district}" data-validation="required"
+                                		data-validation-error-msg="Proszę powiedz nam w jakiej dzielnicy ma być świadczona usługa.">
                                     <option th:each="district : ${availableDistricts}"
                                             th:value="${district.id}"
-                                            th:text="${district.name}"></option>
+                                            th:text="${district.name}">ble</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
@@ -187,8 +203,41 @@
         </div>
     </div>
 
+		<div class="modal fade" id="usunZlecenieModal" tabindex="-1"
+			role="dialog" aria-labelledby="UsunZlecenieModalLabel"
+			aria-hidden="true" th:fragment="usunZlecenie">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="usunZlecenieModalLabel">Usun Zlecenie</h5>
+						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form name="usunZlecenieForm" method="post" id="usunZlecenieFormId"
+							novalidate="novalidate" action="/usunZlecenie" th:object="${pusteZlecenie}">
+							<input type="hidden" id="hidden_zlecenie_id_value" value = '6'/>
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label>Czy napewno chcesz usunąć zlecenie?</label>
+								</div>
+							</div>
+							<br>
+							<div class="modal-footer">
+								<button class="btn btn-secondary" id="usunZlecenieButtonYes" type="button"
+									data-dismiss="modal">Tak</button>
+								<button class="btn btn-secondary" type="button"
+									data-dismiss="modal">Nie</button>
+							</div>
+						</form>
+					</div>
 
-    <!-- Bootstrap core JavaScript-->
+				</div>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
@@ -209,14 +258,60 @@
             //populate new districts
             $.getJSON("/districts/" + selectedCity, function (json) {
                 $.each(json, function (idx, field) {
-                    $("#districtDropdownId").append($("<option></option>")
-                        .attr("value", idx)
+                    $("select#districtDropdownId").append($("<option></option>")
+                        .attr("value", field.id)
                         .text(field.name));
                 });
             });
 
         });
+        
+        $(".usunZlecenie").click(function () {
+        	var komponent = $(this);
+            var zlecenie_id = komponent.attr('zlecenie-id');
+            $("input#hidden_zlecenie_id_value").val(zlecenie_id);
+            $("button#usunZlecenieButtonYes").attr("onclick", "location.href='/zlecenia/usun/" + zlecenie_id + "'");
+        })
 
+        $(".dodajZlecenie").click(function () {
+        	$("h5#dodajZlecenieModalLabel").text("Dodaj Zlecenie");
+        	$("#dodajZLecenieFormId").attr("action","/zlecenia/dodaj");
+        	
+            $("select#specialistDropdownId").val("");
+            $("input#terminDateTimeId").val("");
+            $("select#terminTimeInDayeId").val("");
+            $("select#miastoDropdownId").val("");
+            $("textarea#opisTextAreaId").val("");
+            $("select#districtDropdownId").val("");
+            $("input#nrTelefonuTextId").val("");
+            
+        })
+        
+        $(".edytujZlecenie").click(function () {
+        	var komponent = $(this);
+            
+        	var zlecenie_id = komponent.attr('zlecenie-id');
+        	var specjalista_id = komponent.attr('specjalista_id');
+        	var terminDateTime = komponent.attr('terminDateTime');
+        	var teminTimeOfDay = komponent.attr('teminTimeOfDay');
+        	var miasto_id = komponent.attr('miasto_id');
+        	var opis = komponent.attr('opis');
+        	var dzielnica_id = komponent.attr('dzielnica_id');
+        	var nr_telefonu = komponent.attr('nr-telefonu');
+        	
+            $("h5#dodajZlecenieModalLabel").text("Edytuj Zlecenie");
+            $("#dodajZLecenieFormId").attr("action","/zlecenia/edytuj/"+zlecenie_id);
+        	
+            $("select#specialistDropdownId").val(specjalista_id);
+            $("input#terminDateTimeId").val(terminDateTime);
+            $("select#terminTimeInDayeId").val(teminTimeOfDay);
+            $("select#miastoDropdownId").val(miasto_id).change();
+            $("textarea#opisTextAreaId").val(opis);
+            $("select#districtDropdownId").val(dzielnica_id);
+            $("input#nrTelefonuTextId").val(nr_telefonu);  
+        })
+        
+        
         var myLanguage = {
             errorTitle: 'Błąd w formularzu',
             requiredFields: 'You have not answered all required fields',
@@ -265,8 +360,7 @@
             errorMessagePosition: 'top', // Instead of 'inline' which is default
             language: myLanguage
         });
-
-    </script>
+	</script>
 
 
 </div>
